@@ -11,13 +11,25 @@ offset (or the earliest offset, if needed), thus causing past messages to be rep
 * Kafka must be deployed and running. The sample was tested with v2.4.0. The convenience script kafka-start-stop.sh may be used to start or stop Kafka.
 * Golang. The sample was tested with v1.13.6
 * librdkafka native library. See https://github.com/confluentinc/confluent-kafka-go for details. The sample was tested with librdkafka v1.1.0
+  
+Note:  Build from source per https://github.com/confluentinc/confluent-kafka-go
+```
+git clone https://github.com/edenhill/librdkafka.git
+cd librdkafka
+./configure
+make
+sudo make install
+```
+
 * The test Kafka topic with appropriate number of partitions must be created. Refer to Kafka documentation for steps for creating partitioned topics. Note: The sample uses PLAINTEXT security
 protocol for simplicity.
 
 # Configuration #
 The consumer can be configured via the config.json file. The "replay-type" supports two options: "timestamp", and "beginning". The other
 replay-related properties become relevant only when replay-mode is "true". When "replay-mode" is true and "replay-type" is timestamp, the consumer will reset the committed offset
-to the earliest message that has a timestamp that is equal to or later than the "replay-from" timestamp.
+to the earliest message that has a timestamp that is equal to or later than the "replay-from" timestamp.  
+
+Note:  Need to adjust local timestamp to UTC for the replay-from timestamp below. 
 ```
 {
   "broker-host-endpoint": "localhost:9092",
@@ -28,10 +40,10 @@ to the earliest message that has a timestamp that is equal to or later than the 
   "replay-from": "2019-07-17T14:59:05Z"
 }
 ```
-# Using the kafka-start-stop.sh script
-1. Set the environment variable KAFKA_HOME to the root of your Kafka installation.
-2. To start Zookeeper and Kafka, run "sh kafka-start-stop.sh start".
-3. To stop Zookeeper and Kafka, run "sh kafka-start-stop.sh stop".
+# Using confluent kafka
+```
+confluent local services start
+```
 
 # Testing the Sample Implementation #
 1. Ensure the pre-requisites are fulfilled.
